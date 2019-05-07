@@ -2,7 +2,8 @@ version: '2'
 
 services:
   php:
-    image: php:7-alpine
+    build:
+      context: docker/php
     working_dir: /var/www
     command: php -S 0.0.0.0:8080 -t public
     ports:

@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-use DemoApi\HelloWorld;
+use DemoApi\Application\ProductService;
+use DemoApi\Controller\GetAllProducts;
+use DemoApi\Infrastructure\ProductRepository;
 use DI\ContainerBuilder;
 use function DI\create;
 use function DI\get;
@@ -11,23 +13,20 @@ use Middlewares\FastRoute;
 use Middlewares\RequestHandler;
 use Narrowspark\HttpEmitter\SapiEmitter;
 use Relay\Relay;
-use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequestFactory;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $containerBuilder = new ContainerBuilder();
 $containerBuilder->addDefinitions([
-    HelloWorld::class => create(HelloWorld::class)->constructor(get('Response')),
-    'Response' => function () {
-        return new Response();
-    },
+    ProductRepository::class => create(ProductRepository::class),
+    ProductService::class => create(ProductService::class)->constructor(get(ProductRepository::class)),
+    GetAllProducts::class => create(GetAllProducts::class)->constructor(get(ProductService::class)),
 ]);
 
 $container = $containerBuilder->build();
-$helloWorld = $container->get(HelloWorld::class);
-$routes = simpleDispatcher(function (RouteCollector $r) use ($helloWorld) {
-    $r->get('/hello/{name}', [$helloWorld, 'index']);
+$routes = simpleDispatcher(function (RouteCollector $r) {
+    $r->get('/api/v1/products', GetAllProducts::class);
 });
 
 $middlewareQueue[] = new FastRoute($routes);

@@ -7,6 +7,9 @@
       "email": "edi.maghakyan@gmail.com"
     }
   ],
+  "scripts": {
+    "test": "./vendor/bin/phpunit"
+  },
   "require": {
     "php-di/php-di": "^6.0",
     "relay/relay": "^2.0",
@@ -14,6 +17,9 @@
     "middlewares/fast-route": "^1.2",
     "middlewares/request-handler": "^1.4",
     "narrowspark/http-emitter": "^0.8.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.1"
   },
   "autoload": {
     "psr-4": {
