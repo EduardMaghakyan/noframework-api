@@ -1,12 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use DemoApi\Application\ProductService;
 use DemoApi\Controller\GetAllProducts;
-use DemoApi\Infrastructure\ProductRepository;
+use DemoApi\Controller\GetProductBySku;
+use DemoApi\Controller\GetProductUnitPrice;
 use DI\ContainerBuilder;
-use function DI\create;
-use function DI\get;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
 use Middlewares\FastRoute;
@@ -17,16 +15,20 @@ use Zend\Diactoros\ServerRequestFactory;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
+putenv('DEMO_API_ENV=test');
+$environment = getenv('DEMO_API_ENV');
+if (empty($environment)) {
+    $environment = 'dev';
+}
+
 $containerBuilder = new ContainerBuilder();
-$containerBuilder->addDefinitions([
-    ProductRepository::class => create(ProductRepository::class),
-    ProductService::class => create(ProductService::class)->constructor(get(ProductRepository::class)),
-    GetAllProducts::class => create(GetAllProducts::class)->constructor(get(ProductService::class)),
-]);
+$containerBuilder->addDefinitions("di.config.$environment.php");
 
 $container = $containerBuilder->build();
 $routes = simpleDispatcher(function (RouteCollector $r) {
     $r->get('/api/v1/products', GetAllProducts::class);
+    $r->get('/api/v1/products/[{sku}]', GetProductBySku::class);
+    $r->get('/api/v1/products/{sku}/prices[/{unit}[/]]', GetProductUnitPrice::class);
 });
 
 $middlewareQueue[] = new FastRoute($routes);

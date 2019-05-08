@@ -8,4 +8,6 @@ namespace DemoApi\Domain;
 interface ProductRepositoryInterface
 {
     public function findAllProducts(): array;
+
+    public function findProductBySku(string $sku): ?Product;
 }

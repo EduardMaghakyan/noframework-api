@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  php:
+  api:
     build:
       context: docker/php
     working_dir: /var/www
