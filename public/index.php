@@ -15,7 +15,6 @@ use Zend\Diactoros\ServerRequestFactory;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-putenv('DEMO_API_ENV=test');
 $environment = getenv('DEMO_API_ENV');
 if (empty($environment)) {
     $environment = 'dev';
