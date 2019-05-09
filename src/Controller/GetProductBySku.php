@@ -5,6 +5,8 @@ namespace DemoApi\Controller;
 
 use DemoApi\Application\Exceptions\ProductNotFoundException;
 use DemoApi\Application\ProductService;
+use DemoApi\Utils\Sanitize;
+use DemoApi\Utils\Validator;
 use PHPUnit\Util\Json;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,8 +37,12 @@ class GetProductBySku
             return new JsonResponse(["Required parameter 'sku' is missing!"], 400);
         }
 
+        if (!Validator::isValidSkuFormat($sku)) {
+            return new JsonResponse(["Invalid 'sku'"], 400);
+        }
+
         try {
-            $product = $this->productService->getProductBySku($sku);
+            $product = $this->productService->getProductBySku(Sanitize::sanitize_string($sku));
             return new JsonResponse($product->toArray());
         } catch (ProductNotFoundException $e) {
             return new JsonResponse([sprintf('No product with sku: %s was found', $sku)], 404);

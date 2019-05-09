@@ -20,7 +20,7 @@ class GetAllProductsTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->http = new Client(['base_uri' => 'http://localhost:8080', 'http_errors' => false]);
+        $this->http = new Client(['base_uri' => 'http://localhost:8081', 'http_errors' => false]);
     }
 
     public function test_it_gets_all_products()

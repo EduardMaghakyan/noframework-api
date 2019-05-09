@@ -7,6 +7,8 @@ namespace DemoApi\Controller;
 use DemoApi\Application\Exceptions\ProductNotFoundException;
 use DemoApi\Application\Exceptions\ProductUnitPriceNotFoundException;
 use DemoApi\Application\ProductService;
+use DemoApi\Utils\Sanitize;
+use DemoApi\Utils\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
@@ -40,6 +42,12 @@ class GetProductUnitPrice
             return new JsonResponse(['Required parameter "unit" is missing!'], 400);
         }
 
+        if (!Validator::isValidSkuFormat($sku)) {
+            return new JsonResponse(["Invalid 'sku'"], 400);
+        }
+
+        $sku = Sanitize::sanitize_string($sku);
+        $unit = Sanitize::sanitize_string($unit);
         try {
             $product = $this->productService->getProductUnitPrice($sku, $unit);
             return new JsonResponse($product->toArray());

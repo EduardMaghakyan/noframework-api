@@ -20,15 +20,15 @@ class GetProductUnitPriceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->http = new Client(['base_uri' => 'http://localhost:8080', 'http_errors' => false]);
+        $this->http = new Client(['base_uri' => 'http://localhost:8081', 'http_errors' => false]);
     }
 
     public function test_unit_price()
     {
-        $response = $this->http->request('GET', '/api/v1/products/BA-04/prices/single');
+        $response = $this->http->request('GET', '/api/v1/products/BA-01/prices/piece');
         $actualPrice = json_decode($response->getBody()->getContents(), true);
         $expectedPrice = [
-            'value' => 212.31,
+            'value' => 2.45,
             'currency' => 'EUR',
         ];
         $this->assertEquals(200, $response->getStatusCode());

@@ -15,6 +15,7 @@ use Zend\Diactoros\ServerRequestFactory;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
+define('API_VERSION', 'v1');
 $environment = getenv('DEMO_API_ENV');
 if (empty($environment)) {
     $environment = 'dev';
@@ -25,9 +26,9 @@ $containerBuilder->addDefinitions("di.config.$environment.php");
 
 $container = $containerBuilder->build();
 $routes = simpleDispatcher(function (RouteCollector $r) {
-    $r->get('/api/v1/products', GetAllProducts::class);
-    $r->get('/api/v1/products/[{sku}]', GetProductBySku::class);
-    $r->get('/api/v1/products/{sku}/prices[/{unit}[/]]', GetProductUnitPrice::class);
+    $r->get('/api/' . API_VERSION . '/products', GetAllProducts::class);
+    $r->get('/api/' . API_VERSION . '/products/[{sku}]', GetProductBySku::class);
+    $r->get('/api/' . API_VERSION . '/products/{sku}/prices[/{unit}[/]]', GetProductUnitPrice::class);
 });
 
 $middlewareQueue[] = new FastRoute($routes);
