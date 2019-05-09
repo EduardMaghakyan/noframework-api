@@ -1,6 +1,8 @@
-# DEMO API without any framework
+# Demo API without any framework
 
 ## Setup
+`docker run --rm --interactive --tty --volume $PWD:/app composer install --optimize-autoloader`
+
 `docker-compose build`
 
 `docker-compose up -d`
